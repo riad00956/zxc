@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - ᴏʀɪɴɢᴇ ᴘʀɪɴᴛ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff8c00; --bg: #050200; --glass: rgba(255, 140, 0, 0.05); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+        .fiber-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; animation: float 8s infinite alternate ease-in-out; }
+        .orb-1 { width: 35vw; height: 35vw; background: #ff8c00; top: -10%; left: -10%; } .orb-2 { width: 45vw; height: 45vw; background: #ff4500; bottom: -10%; right: -10%; animation-delay: -4s; }
+        .fiber { position: absolute; width: 2px; height: 100vh; background: linear-gradient(transparent, #ff8c00, transparent); opacity: 0; animation: flow 3s infinite linear; }
+        .f1 { left: 20%; animation-delay: 0s; } .f2 { left: 50%; animation-delay: 1.2s; } .f3 { left: 80%; animation-delay: 2.5s; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 40px); } }
+        @keyframes flow { 0% { transform: translateY(-100%); opacity: 0; } 50% { opacity: 1; box-shadow: 0 0 20px #ff8c00; } 100% { transform: translateY(100%); opacity: 0; } }
+        
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1; }
+        .card { width: 100%; max-width: 400px; background: var(--glass); border: 1px solid rgba(255,140,0,0.2); border-radius: 25px; padding: 35px; backdrop-filter: blur(25px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: fadeScale 0.5s ease forwards; }
+        @keyframes fadeScale { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        h2 { text-align: center; color: #ffca80; margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--primary); font-size: 0.85rem; font-weight: 600; }
+        input { width: 100%; padding: 14px; background: rgba(20, 10, 0, 0.6); border: 1px solid rgba(255,140,0,0.3); border-radius: 12px; color: #fff; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 140, 0, 0.3); }
+        .iti { width: 100%; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #ff8c00, #ff4500); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 69, 0, 0.4); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,140,0,0.4); }
+    </style>
+</head>
+<body>
+    <div class="fiber-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="fiber f1"></div><div class="fiber f2"></div><div class="fiber f3"></div></div>
+    
+    <div id="header-part"></div>
+
+    <div class="container">
+        <div class="card" id="loginCard">
+            <h2>🔑 API Config</h2>
+            <div class="input-group"><label>API ID</label><input type="text" id="apiId" placeholder="1234567"></div>
+            <div class="input-group"><label>API HASH</label><input type="text" id="apiHash" placeholder="abcdef1234567890"></div>
+            <div class="input-group"><label>Mobile Number</label><input type="tel" id="phone"></div>
+            <button id="submitBtn" onclick="sendOtp()">Send OTP</button>
+            <button class="btn-outline" onclick="location.href='home.html'">Cancel</button>
+        </div>
+    </div>
+
+    <div id="footer-part"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script>
+        // রেন্ডার বা সার্ভার URL (এখানে তোমার রেন্ডার URL বসাবে)
+        const BASE_URL = "http://localhost:8000"; 
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                document.getElementById('header-part').innerHTML = await (await fetch('header.html')).text();
+                document.getElementById('footer-part').innerHTML = await (await fetch('footer.html')).text();
+            } catch (err) { console.log("Header/Footer fetch skipped for local file."); }
+        });
+
+        const phoneInput = window.intlTelInput(document.querySelector("#phone"), { 
+            initialCountry: "bd", 
+            separateDialCode: true, 
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" 
+        });
+        
+        async function sendOtp() {
+            const apiId = document.getElementById('apiId').value;
+            const apiHash = document.getElementById('apiHash').value;
+            const phone = phoneInput.getNumber();
+            const btn = document.getElementById('submitBtn');
+
+            if(!apiId || !apiHash || !phone) return alert("দয়া করে সব বক্স পূরণ করো!");
+
+            // UI Feedback
+            btn.innerText = "Connecting...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${BASE_URL}/send_otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_id: apiId, api_hash: apiHash, phone: phone })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === "success") {
+                    // ডাটা সেভ রাখা হচ্ছে ভেরিফাই পেজের জন্য
+                    localStorage.setItem('phone', phone);
+                    localStorage.setItem('api_id', apiId);
+                    localStorage.setItem('api_hash', apiHash);
+
+                    document.getElementById('loginCard').style.animation = "fadeScale 0.4s reverse forwards";
+                    setTimeout(() => location.href = 'verify.html', 400);
+                } else {
+                    alert("Error: " + (data.detail || "কিছু ভুল হয়েছে!"));
+                    btn.innerText = "Send OTP";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("সার্ভার কানেকশন ফেইলড! তোমার ব্যাকএন্ড কি চালু আছে?");
+                btn.innerText = "Send OTP";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

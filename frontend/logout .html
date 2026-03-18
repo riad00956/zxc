@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logout - ᴏʀɪɴɢᴇ ᴘʀɪɴᴛ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff8c00; --bg: #050200; --glass: rgba(255, 140, 0, 0.05); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+        .fiber-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; animation: float 8s infinite alternate ease-in-out; }
+        .orb-1 { width: 35vw; height: 35vw; background: #ff8c00; top: -10%; left: -10%; } .orb-2 { width: 45vw; height: 45vw; background: #ff4500; bottom: -10%; right: -10%; animation-delay: -4s; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 40px); } }
+        
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1; }
+        .card { max-width: 400px; text-align: center; background: var(--glass); border: 1px solid rgba(255,140,0,0.2); border-radius: 25px; padding: 40px; backdrop-filter: blur(25px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .icon { font-size: 3rem; margin-bottom: 15px; animation: floatIcon 2s infinite ease-in-out; }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        h2 { color: #ffca80; margin: 0 0 10px; }
+        p { color: rgba(255,255,255,0.6); margin-bottom: 25px; font-size: 0.9rem; }
+        button { width: 100%; padding: 15px; background: transparent; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: var(--primary); color: #000; box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="fiber-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+    
+    <div id="header-part"></div>
+
+    <div class="container">
+        <div class="card">
+            <div class="icon">👻</div>
+            <h2>Session Cleared</h2>
+            <p>Your Telegram account has been safely disconnected from Phantom.</p>
+            <button onclick="location.href='home.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <div id="footer-part"></div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('header-part').innerHTML = await (await fetch('header.html')).text();
+            document.getElementById('footer-part').innerHTML = await (await fetch('footer.html')).text();
+        });
+    </script>
+</body>
+</html>

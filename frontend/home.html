@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - ᴏʀɪɴɢᴇ ᴘʀɪɴᴛ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff8c00; --bg: #050200; --glass: rgba(255, 140, 0, 0.05); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Ghost Fiber Background */
+        .fiber-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; animation: float 8s infinite alternate ease-in-out; }
+        .orb-1 { width: 35vw; height: 35vw; background: #ff8c00; top: -10%; left: -10%; }
+        .orb-2 { width: 45vw; height: 45vw; background: #ff4500; bottom: -10%; right: -10%; animation-delay: -4s; }
+        .fiber { position: absolute; width: 2px; height: 100vh; background: linear-gradient(transparent, #ff8c00, transparent); opacity: 0; animation: flow 3s infinite linear; }
+        .f1 { left: 20%; animation-delay: 0s; } .f2 { left: 50%; animation-delay: 1.2s; height: 120vh; } .f3 { left: 80%; animation-delay: 2.5s; } .f4 { left: 35%; animation-delay: 0.8s; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 40px); } }
+        @keyframes flow { 0% { transform: translateY(-100%); opacity: 0; } 50% { opacity: 1; box-shadow: 0 0 20px #ff8c00; } 100% { transform: translateY(100%); opacity: 0; } }
+        
+        /* UI Elements */
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1; }
+        .card { max-width: 450px; text-align: center; background: var(--glass); border: 1px solid rgba(255,140,0,0.2); border-radius: 30px; padding: 50px 30px; backdrop-filter: blur(25px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(40px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        h1 { color: #ffca80; font-size: 2.2rem; margin: 0 0 15px; }
+        p { color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 30px; }
+        button { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff8c00, #ff4500); border: none; border-radius: 15px; color: #fff; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        button:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(255, 69, 0, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="fiber-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="fiber f1"></div><div class="fiber f2"></div><div class="fiber f3"></div><div class="fiber f4"></div></div>
+    
+    <div id="header-part"></div>
+
+    <div class="container">
+        <div class="card">
+            <h1>Welcome to Phantom</h1>
+            <p>The ultimate Ghost Fiber animated Telegram auto-reply system. Stay securely online.</p>
+            <button onclick="location.href='login.html'">Get Started 🚀</button>
+        </div>
+    </div>
+
+    <div id="footer-part"></div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('header-part').innerHTML = await (await fetch('header.html')).text();
+            document.getElementById('footer-part').innerHTML = await (await fetch('footer.html')).text();
+        });
+    </script>
+</body>
+</html>
