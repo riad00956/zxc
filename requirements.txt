@@ -3,3 +3,4 @@ uvicorn
 telethon
 requests
 python-multipart
+jinja2
